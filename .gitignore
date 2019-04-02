@@ -1,0 +1,6 @@
+__*
+*.log
+*.png
+!dummy_test*
+.*
+!.gitignore
