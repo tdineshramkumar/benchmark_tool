@@ -1,0 +1,13 @@
+MEMORY: 17179869184 bytes 	 CPU: 12 VIRT 6 PHY 2600 MHz
+PID: 57888 PPID: 57711 USER: dinesh.kumar EXE: /usr/local/Cellar/python/3.7.2_1/Frameworks/Python.framework/Versions/3.7/Resources/Python.app/Contents/MacOS/Python CREATION: 1554185448.125405
+{"cpu_times": {"user": 0.016594701, "system": 0.013120079}, "cpu_percent": 1.0, "memory": {"rss": 1417216, "vms": 4370812928}, "num_fds": 3, "num_threads": 1, "time": 1554185449.385516}
+{"cpu_times": {"user": 0.023353396, "system": 0.016101562}, "cpu_percent": 0.0, "memory": {"rss": 1429504, "vms": 4371861504}, "num_fds": 3, "num_threads": 1, "time": 1554185450.38979}
+{"cpu_times": {"user": 0.023473056, "system": 0.016378275}, "cpu_percent": 0.1, "memory": {"rss": 1441792, "vms": 4372910080}, "num_fds": 3, "num_threads": 1, "time": 1554185451.392243}
+{"cpu_times": {"user": 0.023664876, "system": 0.016922366}, "cpu_percent": 0.0, "memory": {"rss": 1441792, "vms": 4372910080}, "num_fds": 3, "num_threads": 1, "time": 1554185452.395668}
+{"cpu_times": {"user": 0.023793204, "system": 0.017238924}, "cpu_percent": 0.0, "memory": {"rss": 1441792, "vms": 4372910080}, "num_fds": 3, "num_threads": 1, "time": 1554185453.397804}
+{"cpu_times": {"user": 0.023918504, "system": 0.017568784}, "cpu_percent": 0.2, "memory": {"rss": 1466368, "vms": 4375007232}, "num_fds": 3, "num_threads": 1, "time": 1554185454.400529}
+{"cpu_times": {"user": 0.024267618, "system": 0.01888534}, "cpu_percent": 0.1, "memory": {"rss": 1466368, "vms": 4375007232}, "num_fds": 3, "num_threads": 1, "time": 1554185455.404532}
+{"cpu_times": {"user": 0.024418106, "system": 0.019267612}, "cpu_percent": 0.0, "memory": {"rss": 1478656, "vms": 4376055808}, "num_fds": 3, "num_threads": 1, "time": 1554185456.4081018}
+{"cpu_times": {"user": 0.024539088, "system": 0.019580002}, "cpu_percent": 0.1, "memory": {"rss": 1490944, "vms": 4377104384}, "num_fds": 3, "num_threads": 1, "time": 1554185457.41198}
+{"cpu_times": {"user": 0.024815046, "system": 0.020269784}, "cpu_percent": 0.0, "memory": {"rss": 1490944, "vms": 4377104384}, "num_fds": 3, "num_threads": 1, "time": 1554185458.415193}
+{"cpu_times": {"user": 0.024920654, "system": 0.020543952}, "cpu_percent": 0.1, "memory": {"rss": 1490944, "vms": 4377104384}, "num_fds": 3, "num_threads": 1, "time": 1554185459.4173682}

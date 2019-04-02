@@ -1,0 +1,12 @@
+MEMORY: 17179869184 bytes 	 CPU: 12 VIRT 6 PHY 2600 MHz
+PID: 57889 PPID: 57888 USER: dinesh.kumar EXE: /usr/local/Cellar/python/3.7.2_1/Frameworks/Python.framework/Versions/3.7/Resources/Python.app/Contents/MacOS/Python CREATION: 1554185448.244711
+{"cpu_times": {"user": 0.018099952, "system": 0.01445695}, "cpu_percent": 0.2, "memory": {"rss": 7221248, "vms": 4511162368}, "num_fds": 8, "num_threads": 5, "time": 1554185449.498059}
+{"cpu_times": {"user": 0.020204012, "system": 0.014848827}, "cpu_percent": 0.2, "memory": {"rss": 7221248, "vms": 4511162368}, "num_fds": 8, "num_threads": 5, "time": 1554185450.501545}
+{"cpu_times": {"user": 0.02197269, "system": 0.014992853}, "cpu_percent": 0.3, "memory": {"rss": 7245824, "vms": 4511162368}, "num_fds": 8, "num_threads": 5, "time": 1554185451.5035641}
+{"cpu_times": {"user": 0.024533572, "system": 0.015357812}, "cpu_percent": 0.2, "memory": {"rss": 7249920, "vms": 4511162368}, "num_fds": 8, "num_threads": 5, "time": 1554185452.505982}
+{"cpu_times": {"user": 0.026349152, "system": 0.015540598}, "cpu_percent": 0.5, "memory": {"rss": 7438336, "vms": 4511162368}, "num_fds": 8, "num_threads": 5, "time": 1554185453.508418}
+{"cpu_times": {"user": 0.02997524, "system": 0.016638656}, "cpu_percent": 1.2, "memory": {"rss": 1458176, "vms": 4390735872}, "num_fds": 3, "num_threads": 1, "time": 1554185454.5115001}
+{"cpu_times": {"user": 0.037583764, "system": 0.020835048}, "cpu_percent": 0.1, "memory": {"rss": 1458176, "vms": 4390735872}, "num_fds": 3, "num_threads": 1, "time": 1554185455.514862}
+{"cpu_times": {"user": 0.03782056, "system": 0.021409064}, "cpu_percent": 0.1, "memory": {"rss": 1458176, "vms": 4390735872}, "num_fds": 3, "num_threads": 1, "time": 1554185456.5193658}
+{"cpu_times": {"user": 0.038084644, "system": 0.022048344}, "cpu_percent": 0.1, "memory": {"rss": 1470464, "vms": 4391784448}, "num_fds": 3, "num_threads": 1, "time": 1554185457.523937}
+{"cpu_times": {"user": 0.038335152, "system": 0.022677352}, "cpu_percent": 0.0, "memory": {"rss": 1470464, "vms": 4391784448}, "num_fds": 3, "num_threads": 1, "time": 1554185458.527562}
