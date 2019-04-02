@@ -1,0 +1,7 @@
+#!/bin/bash
+for iteration in {1..5}
+do
+    echo "Client running iteration " $iteration
+    sleep 1
+done
+echo "Client exiting"
