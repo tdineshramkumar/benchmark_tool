@@ -44,6 +44,7 @@ def monitor_process_stats(pid, interval=1):
         print('PID:', process.pid, 'PPID:', process.ppid(), 'USER:', process.username(),
               'EXE:', process.exe(), 'CREATION:', process.create_time(), flush=True)
         while True:
+            """ Note: call to cpu_percent is blocking for the given interval """
             stats = {
                 # CPU Stats
                 'cpu_times': {

@@ -28,21 +28,30 @@ def convert_daemon(out_file=None, err_file=None):
     os.umask(0)
 
 
-def monitor_process_branches_daemon(interval=0.1, out_file="branching_out.log", err_file="branching_error.log"):
+def monitor_process_branches_daemon(interval=0.1, out_file="branching_out.log", err_file="branching_error.log",
+                                    monitor_file="monitor_processes.log"):
     """ This function creates a daemon process to monitor the current process and its children,
         Note: this process does not monitor itself
+        this also monitors the system usage of processes
      """
     """ Get current process details before creating daemon process """
     root_pid_ = os.getpid()
     root_ppid_ = os.getppid()
     root_process_ = psutil.Process()
     daemon_pid_ = os.fork()
+    """ Create the monitor file in the current user directory, before launching the daemon """
+    monitor_file_ = open(monitor_file, 'w')
+    """ Thus a function to write to monitor file """
+    monitor = lambda *values, **kwargs: print(*values, file=monitor_file_, **kwargs)
+
     """ Fork and create a daemon process to monitor its parent process """
     if daemon_pid_ == 0:
         """ Monitor from a daemon process """
         daemon_pid_ = os.getpid()
         convert_daemon(out_file, err_file)
         error = lambda *values, **kwargs: print(*values, file=sys.stderr, **kwargs)
+        """ Also open file for logging processes stats """
+
         running_processes_ = {root_process_}
         """ Also keep track of current process, to prevent processing it and waiting for itself """
         daemon_process_ = psutil.Process()
@@ -86,13 +95,49 @@ def monitor_process_branches_daemon(interval=0.1, out_file="branching_out.log", 
                         "exit_time": process_exit_time_,
                         "life_time": process_exit_time_ - process_creation_time_,
                         "root": process_pid_ == root_pid_,
-                    }))
+                    }), flush=True)
+
+            """ Now the monitoring phase, after discovering the processes, re-run the above loop
+                         instead of looking for children, now get system usages """
+            for process_ in running_processes_.copy():
+                try:
+                    process_pid_ = process_.pid
+                    process_ppid_ = parent_pids_[process_pid_]
+                    stats = {
+                        'pid': process_pid_, 'ppid': process_ppid_,
+                        'cpu_times': {'user': process_.cpu_times().user, 'system': process_.cpu_times().system},
+                        'memory': {'rss': process_.memory_info().rss, 'vms': process_.memory_info().vms},
+                        'num_fds': process_.num_fds(), 'num_threads': process_.num_threads(),
+                        'time': time.time(),
+                    }
+                    monitor(json.dumps(stats), flush=True)
+                except psutil.Error:
+                    """ If a process exits, then remove """
+                    running_processes_.remove(process_)
+                    process_pid_ = process_.pid
+                    process_ppid_ = parent_pids_[process_pid_]
+                    process_creation_time_ = process_.create_time()
+                    """ Note: exit time is an estimation, based on when exception is thrown """
+                    process_exit_time_ = time.time()
+                    print(json.dumps({
+                        "pid": process_pid_,
+                        "ppid": process_ppid_,
+                        "creation_time": process_creation_time_,
+                        "exit_time": process_exit_time_,
+                        "life_time": process_exit_time_ - process_creation_time_,
+                        "root": process_pid_ == root_pid_,
+                    }), flush=True)
+
+            """ Wait for specified interval before re-discovering and monitoring  """
             time.sleep(interval)
-            """ If monitoring process times, do it here """
+        """ Close the monitor file before exiting daemon """
+        monitor_file_.close()
         error("daemon process", daemon_pid_, "exited")
         exit(0)
-    """ Return the pid of daemon if needed """
+    """ Close the monitor log file in the parent process """
+    monitor_file_.close()
     print("daemon monitoring process running with pid", daemon_pid_)
+    """ Return the pid of daemon if needed """
     return daemon_pid_
 
 
@@ -123,6 +168,52 @@ def __find_num_descendants__(all_stats_, pid_):
             __find_num_descendants__(all_stats_, child_pid_)
             """ Then, update current based on it """
             all_stats_[pid_]["num_descendants"] += all_stats_[child_pid_]["num_descendants"]
+
+
+def generate_process_cpu_utilization_graph(monitor_file="monitor_processes.log", figure_file="monitor_cpu.png"):
+    """ This function plots the CPU Utilization of all processes onto the same graph
+    using the specified log file and outputs the result to specified file """
+    processes_stats_ = {}
+    with open(monitor_file) as file:
+        for line in file:
+            process_stats_ = json.loads(line)
+            """ Later on update the cpu_percent """
+            process_stats_["cpu_percent"] = 0.0
+            process_pid_ = process_stats_["pid"]
+            if process_pid_ not in processes_stats_:
+                """ Add a empty list """
+                processes_stats_[process_pid_] = []
+            """ Append to stats of the given process """
+            processes_stats_[process_pid_].append(process_stats_)
+
+        """ Now find the CPU Utilization for each of the processes """
+        for pid_ in processes_stats_:
+            for i in range(1, len(processes_stats_[pid_])):
+                """ Find the CPU Utilization using current and previous CPU times"""
+                process_stats_cur_ = processes_stats_[pid_][i]
+                process_stats_prv_ = processes_stats_[pid_][i - 1]
+                user_time_spent = process_stats_cur_["cpu_times"]["user"] - process_stats_prv_["cpu_times"]["user"]
+                sys_time_spent = process_stats_cur_["cpu_times"]["system"] - process_stats_prv_["cpu_times"]["system"]
+                time_interval = process_stats_cur_["time"] - process_stats_prv_["time"]
+                if time_interval != 0.0:
+                    assert time_interval > 0
+                    processes_stats_[pid_][i]["cpu_percent"] = (user_time_spent + sys_time_spent) / time_interval
+
+        """ Find the starting time, minimum of all times across all process """
+        start_time = min(processes_stats_[pid_][0]["time"] for pid_ in processes_stats_)
+        import matplotlib.pyplot as plt
+        """ Plot the CPU utilization of all processes using the matplotlib on the same plot """
+        plt.figure(figsize=(20, 10))
+        for pid_ in processes_stats_:
+            times = [process_stats_["time"] - start_time for process_stats_ in processes_stats_[pid_]]
+            cpu_percent = [process_stats_["cpu_percent"] for process_stats_ in processes_stats_[pid_]]
+            plt.plot(times, cpu_percent, label=str(pid_))
+        plt.xlabel("Time")
+        plt.ylabel("CPU Utilization")
+        plt.legend()
+        plt.title("CPU Utilization of processes")
+        plt.savefig(figure_file)
+        plt.clf()
 
 
 def generate_process_branching_image(out_log_file="branching_out.log", figure_file="branching.png", time_resolution=0.1,
@@ -206,4 +297,5 @@ def generate_process_branching_image(out_log_file="branching_out.log", figure_fi
 if __name__ == "__main__":
     """ Run the program with default arguments """
     generate_process_branching_image()
+    generate_process_cpu_utilization_graph()
 

@@ -39,7 +39,8 @@ To monitor a process to obtain the branching pattern, call
 _process_graph.monitor_process_branches_daemon_
 
 method from the process, which will generate the log file containing process 
-start and end times as well as parent child relationships.
+start and end times as well as parent child relationships. Also this daemon monitors
+the system utilization of the child processes.
 
 To generate graph using that log file, call the 
 
@@ -49,3 +50,6 @@ to generate a image containing the process branching relation in form of Cladogr
 Examples: forks.py and steps.py are some applications with use the monitoring 
 functionality to generate logs. After running some example, run the process_graph.py 
 to generate the graph with default arguments.
+
+Also there is functionality to plot the CPU utilization of all processes on a graph 
+using matplotlib.

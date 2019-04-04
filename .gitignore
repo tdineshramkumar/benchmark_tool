@@ -5,3 +5,4 @@ __*
 .*
 !.gitignore
 !branching*
+!monitor_cpu.png
